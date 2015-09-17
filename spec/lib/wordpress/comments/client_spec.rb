@@ -41,4 +41,13 @@ describe Wordpress::Comments::Client do
     end
   end
 
+  describe "#fetch" do
+
+    let(:comments) { client.fetch }
+
+    it 'builds comment objects' do
+      expect(comments.length).to eq 30
+    end
+
+  end
 end

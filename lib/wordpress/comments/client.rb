@@ -10,6 +10,11 @@ module Wordpress
         @url = url
       end
 
+      def fetch
+        xml = File.read(File.join('spec', 'fixtures', 'feed.xml'))
+        parse xml
+      end
+
       def parse(xml)
         doc = Nokogiri::XML xml
         doc.search('item').map do |doc_item|
