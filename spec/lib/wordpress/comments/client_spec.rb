@@ -3,7 +3,7 @@ require_relative '../../../../lib/wordpress/comments/client'
 require_relative '../../../support/match_date'
 
 describe Wordpress::Comments::Client do
-
+  let(:xml)    { File.read(File.join('spec', 'fixtures', 'feed.xml')) }
   let(:client) { Wordpress::Comments::Client.new('http://mashable.com/comments/feed') }
 
   describe "#initialize" do
@@ -13,7 +13,6 @@ describe Wordpress::Comments::Client do
   end
 
   describe '#parse' do
-    let(:xml)      { File.read(File.join('spec', 'fixtures', 'feed.xml')) }
     let(:comments) { client.parse xml }
     let(:comment)  { comments.first }
 
@@ -42,12 +41,16 @@ describe Wordpress::Comments::Client do
   end
 
   describe "#fetch" do
-
     let(:comments) { client.fetch }
 
-    it 'builds comment objects' do
-      expect(comments.length).to eq 30
-    end
+    context 'success' do
+      before(:each) do
+        client.stub(:get).and_return(xml)
+      end
 
+      it 'builds comment objects' do
+        expect(comments.length).to eq 30
+      end
+    end
   end
 end
