@@ -1,3 +1,4 @@
+require 'nokogiri'
 module Wordpress
   module Comments
     class Client
@@ -8,8 +9,14 @@ module Wordpress
       end
 
       def parse(xml)
-        
+        doc = Nokogiri::XML xml
+        doc.search('item').map do |doc_item|
+          item = {}
+          item[:link] = doc_item.at('link').text
+          item
+        end
       end
+
 
     end
   end
@@ -34,7 +41,7 @@ describe Wordpress::Comments::Client do
       comments = client.parse xml
       comment  = comments.first
       link = "http://mashable.com/2012/07/18/ipad-early-photos/comment-page-1/#comment-18239503"
-      expect(comment.link).to eq link
+      expect(comment[:link]).to eq link
     end
 
   end
